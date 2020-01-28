@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simon game</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="./css/style.css">
+    </head>
+    <body>
+        <h1>Simon Game</h1>
+        <button class="btn">RESTART</button>
+        <!-- <button class="btn2">PLAY SEQ</button> -->
+        <div class="container">
+            <button id="green" onclick="playPad('green')">
+                <audio src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"></audio>
+            </button>
+            <button id="red" onclick="playPad('red')">
+                <audio src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"></audio>
+            </button>
+            <button id="yellow" onclick="playPad('yellow')">
+                <audio src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"></audio>
+            </button>
+            <button id="blue" onclick="playPad('blue')">
+                <audio src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"></audio>
+            </button>
+        </div>
+
+    <script src="./js/app.js"></script>
+    </body>
+</html>
