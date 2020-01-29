@@ -7,8 +7,8 @@ function addRandomSound () {
 }
 
 let success;
-let startButton = document.getElementsByClassName('btn')[0];
-startButton.addEventListener('click', function () { // Réinitialisation
+let startBtn = document.getElementsByClassName('btn')[0];
+startBtn.addEventListener('click', function () { // Réinitialisation
     success = 0;
     sequence = [];
     addRandomSound();
@@ -23,7 +23,7 @@ function playPad (padName) {
 
 function activatePad (padName) {
     // Jouer le son concerné
-    var audio = new Audio(document.getElementById(padName).children[0].src);
+    let audio = new Audio(document.getElementById(padName).children[0].src);
     audio.play();
 
     // Allumer et éteindre le bouton
@@ -35,18 +35,19 @@ function activatePad (padName) {
 
 function checkSequence (padName) {
     let idxActivePad = pads.indexOf(padName);// Trouver l'index du pad concerné
-    if(sequence[success] === idxActivePad) { // Vérifier si le Pad cliqué correspond à l'élément courant de la séquence
+    if(sequence[success] === idxActivePad) { // Vérifier si le pad cliqué correspond à l'élément courant de la séquence
         success += 1;                          // Si oui, c'est un essai réussi de plus
-        if(sequence.length !== success) {      // Si le nombre d'essais ne  correspond pas encore à la fin de la séquence,
+        if(sequence.length !== success) {      // Si le nombre d'essais ne correspond pas encore à la fin de la séquence,
             return;                                 // On passe au pad suivant
-        } else {                               // Si le nombre d'essai arrive à la fin de la séquence,
+        } else {                               // Si le joueur arrive avec succès à la fin de la séquence,
             if (sequence.length === 14)             // Le jeu se termine après 15 essais réussis
                 return alert('gagné !');
 
             setTimeout( () => {                // Sinon, refaire écouter la séquence en y ajoutant un nouveau son
                 addRandomSound();
                 playSequence();
-            } , 600)
+            } , 600);                          // Léger délai avant la lecture de la séquence
+
             success = 0;
         }
     } else { // Echec
