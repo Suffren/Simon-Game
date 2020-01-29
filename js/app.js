@@ -49,14 +49,14 @@ function checkSequence (padName) {
             } , 600)
             success = 0;
         }
-    } else {
-        startButton.removeAttribute("disabled"); // Echec
+    } else { // Echec
         sequence = [];
         alert('Perdu !');
     }
 }
 
 function playSequence () {
+    playSeqBtn.setAttribute('disabled', 'disabled'); // Désactiver le bouton de lecture pendant celle ci
     let i = 0;
     function defer() {
         setTimeout(function () {
@@ -64,14 +64,15 @@ function playSequence () {
             if (i <= sequence.length) {            // Commnencer au début de la séquence
                 activatePad(pads[sequence[i -1]]); // Obtenir l'index du pad en cours et l'activer
                 defer();
+            } else {
+                playSeqBtn.removeAttribute('disabled');
             }
         }, 550);
     }
     defer();
 }
 
-// A implémenter: Possibilité de rejouer la séquence en mode "Facile"
-// let playSeq = document.getElementsByClassName('btn2')[0];
-// playSeq.addEventListener('click', function () {
-//     playSequence();
-// });
+let playSeqBtn = document.getElementsByClassName('btn2')[0];
+playSeqBtn.addEventListener('click', function () {
+    playSequence();
+});
