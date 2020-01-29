@@ -57,17 +57,17 @@ function checkSequence (padName) {
 }
 
 function playSequence () {
-    var i = 0;
-    function deferred() {
+    let i = 0;
+    function defer() {
         setTimeout(function () {
             i++;
-            if (i <= sequence.length) {
-                activatePad(pads[sequence[i -1]])
-                deferred();
+            if (i <= sequence.length) {            // Commnencer au début de la séquence
+                activatePad(pads[sequence[i -1]]); // Obtenir l'index du pad en cours et l'activer
+                defer();
             }
         }, 550);
     }
-    deferred();
+    defer();
 }
 
 // A implémenter: Possibilité de rejouer la séquence en mode "Facile"
