@@ -1,3 +1,5 @@
+'use strict';
+
 const pads = ['green', 'red', 'yellow', 'blue'];
 
 let sequence = [];
