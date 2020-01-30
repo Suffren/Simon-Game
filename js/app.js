@@ -2,6 +2,13 @@
 
 const pads = ['green', 'red', 'yellow', 'blue'];
 
+let playSeqBtn = document.getElementsByClassName('btn2')[0];
+playSeqBtn.setAttribute('disabled', 'disabled');
+playSeqBtn.addEventListener('click', function () {
+    playSequence(sequence, 500).then(function () { playSeqBtn.removeAttribute('disabled')});
+});
+
+let startSequence = [2,3,1,0];
 let sequence = [];
 function addRandomSound () {
     let newSound = Math.floor(Math.random() * Math.floor(4));
@@ -14,7 +21,14 @@ startBtn.addEventListener('click', function () { // Réinitialisation
     success = 0;
     sequence = [];
     addRandomSound();
-    activatePad(pads[sequence[0]]);
+    playSequence(startSequence, 200).then(function () {
+        setTimeout(
+            function () {
+                playSeqBtn.removeAttribute('disabled');
+                activatePad(pads[sequence[0]]);
+            },
+        1000)
+        });
 });
 
 function playPad (padName) {
@@ -47,12 +61,13 @@ function checkSequence (padName) {
 
             setTimeout( () => {                // Sinon, refaire écouter la séquence en y ajoutant un nouveau son
                 addRandomSound();
-                playSequence(sequence, 500);
-            } , 600);                          // Léger délai avant la lecture de la séquence
+                playSequence(sequence, 500).then(function() { playSeqBtn.removeAttribute('disabled')});
+            } , 1000);                         // Léger délai avant la lecture de la séquence
 
             success = 0;
         }
     } else { // Echec
+        playSeqBtn.setAttribute('disabled', 'disabled');
         sequence = [];
         alert('Perdu !');
     }
@@ -60,23 +75,16 @@ function checkSequence (padName) {
 
 function playSequence (seq, delay) {
     success = 0;
-    playSeqBtn.setAttribute('disabled', 'disabled');// Désactiver le bouton de lecture pendant celle ci
-    let i = 0;
-    function defer() {                             // Donner un délai suffisant au joueur pour appréhender la séquence
-        setTimeout(function () {
-            i++;
-            if (i <= seq.length) {            // Commnencer au début de la séquence
-                activatePad(pads[seq[i -1]]); // Obtenir l'index du pad en cours et l'activer
-                defer();
-            } else {
-                playSeqBtn.removeAttribute('disabled');
-            }
-        }, delay);
-    }
-    defer();
-}
+    playSeqBtn.setAttribute('disabled', 'disabled');    // Désactiver le bouton de lecture pendant celle ci
 
-let playSeqBtn = document.getElementsByClassName('btn2')[0];
-playSeqBtn.addEventListener('click', function () {
-    playSequence(sequence, 500);
-});
+    var promise = new Promise( resolve => resolve());   // Création d'un promesse déjà tenue
+    seq.forEach(function (el, idx) {                    // Pour chaque élement de la séquence
+        promise = promise.then(function () {                // Excécution asynchrone
+            activatePad(pads[seq[idx]]);                    // ... de l'activation d'un pad
+            return new Promise(function (resolve) {         // puis attendre le temps du délai
+                setTimeout(resolve, delay);
+            });
+        });
+    });
+    return promise;
+}
