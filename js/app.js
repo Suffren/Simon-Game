@@ -8,7 +8,7 @@ function addRandomSound () {
     sequence.push(newSound);
 }
 
-let success;
+let success = 0;
 let startBtn = document.getElementsByClassName('btn')[0];
 startBtn.addEventListener('click', function () { // Réinitialisation
     success = 0;
@@ -58,8 +58,9 @@ function checkSequence (padName) {
     }
 }
 
-function playSequence () {
-    playSeqBtn.setAttribute('disabled', 'disabled'); // Désactiver le bouton de lecture pendant celle ci
+function playSequence (seq, delay) {
+    success = 0;
+    playSeqBtn.setAttribute('disabled', 'disabled');// Désactiver le bouton de lecture pendant celle ci
     let i = 0;
     function defer() {
         setTimeout(function () {
