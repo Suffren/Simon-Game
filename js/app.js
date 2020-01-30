@@ -47,7 +47,7 @@ function checkSequence (padName) {
 
             setTimeout( () => {                // Sinon, refaire écouter la séquence en y ajoutant un nouveau son
                 addRandomSound();
-                playSequence();
+                playSequence(sequence, 500);
             } , 600);                          // Léger délai avant la lecture de la séquence
 
             success = 0;
@@ -62,21 +62,21 @@ function playSequence (seq, delay) {
     success = 0;
     playSeqBtn.setAttribute('disabled', 'disabled');// Désactiver le bouton de lecture pendant celle ci
     let i = 0;
-    function defer() {
+    function defer() {                             // Donner un délai suffisant au joueur pour appréhender la séquence
         setTimeout(function () {
             i++;
-            if (i <= sequence.length) {            // Commnencer au début de la séquence
-                activatePad(pads[sequence[i -1]]); // Obtenir l'index du pad en cours et l'activer
+            if (i <= seq.length) {            // Commnencer au début de la séquence
+                activatePad(pads[seq[i -1]]); // Obtenir l'index du pad en cours et l'activer
                 defer();
             } else {
                 playSeqBtn.removeAttribute('disabled');
             }
-        }, 550);
+        }, delay);
     }
     defer();
 }
 
 let playSeqBtn = document.getElementsByClassName('btn2')[0];
 playSeqBtn.addEventListener('click', function () {
-    playSequence();
+    playSequence(sequence, 500);
 });
