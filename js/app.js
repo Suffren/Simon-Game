@@ -3,14 +3,15 @@
 const pads = ['green', 'red', 'yellow', 'blue'];
 
 let playSeqBtn = document.getElementById('playSeq');
-let btns = [...document.getElementsByClassName('btn')];
+let btnElts = [...document.getElementsByClassName('btn')];
+let padElts = [...document.getElementsByClassName('pad')];
 
 playSeqBtn.setAttribute('disabled', 'disabled');
 playSeqBtn.addEventListener('click', () =>
-    playSequence(sequence, 500).then( () => enablePlayButtons() )
+    playSequence(sequence, 500).then( () => enableButtons() )
 );
 
-const startSequence = [2,3,1,0];
+const bootSequence = [2,3,1,0];
 let sequence = [];
 let addRandomSound = () => {
     let newSound = Math.floor(Math.random() * Math.floor(4));
@@ -23,9 +24,9 @@ startBtn.addEventListener('click', () => { // Réinitialisation
     success = 0;
     sequence = [];
     addRandomSound();
-    playSequence(startSequence, 200).then( () => {
+    playSequence(bootSequence, 200).then( () => {
         setTimeout( () => {
-                btns.forEach( el => el.removeAttribute('disabled'))
+                enableButtons();
                 activatePad(pads[sequence[0]]);
         }, 1000)
     });
@@ -43,8 +44,8 @@ let activatePad = (padName) => {
     audio.play();
 
     // Allumer et éteindre le pad
-    document.getElementById(padName).style = 'background-color: purple; box-shadow: 0px 0px 30px purple';
-    setTimeout( () => document.getElementById(padName).style = `background-color: ${padName}; box-shadow: 0px`, 300);
+    document.getElementById(padName).style = 'background-color: purple; box-shadow: 0px 0px 30px purple;';
+    setTimeout( () => document.getElementById(padName).style = `background-color: ${padName}; box-shadow: 0px;`, 300);
 }
 
 let checkSequence = (padName) => {
@@ -54,12 +55,14 @@ let checkSequence = (padName) => {
         if(sequence.length !== success) {      // Si le nombre d'essais ne correspond pas encore à la fin de la séquence,
             return;                                 // On passe au pad suivant
         } else {                               // Si le joueur arrive avec succès à la fin de la séquence,
-            if (sequence.length === 14)             // Le jeu se termine après 15 essais réussis
-                return alert('gagné !');
+            if (sequence.length === 3) {            // Le jeu se termine après 15 essais réussis
+                sequence = [];
+                return playSequence(bootSequence.concat(bootSequence).concat(bootSequence), 150).then( () => enableButtons() );
+            }
 
             setTimeout( () => {                // Sinon, refaire écouter la séquence en y ajoutant un nouveau son
                 addRandomSound();
-                playSequence(sequence, 500).then( () => enablePlayButtons() );
+                playSequence(sequence, 500).then( () => enableButtons() );
             } , 1000);                         // Léger délai avant la lecture de la séquence
 
             success = 0;
@@ -73,7 +76,8 @@ let checkSequence = (padName) => {
 
 let playSequence = (seq, delay) => {
     success = 0;
-    btns.forEach( el => el.setAttribute('disabled', 'disabled')); // Désactiver les boutons "play" lors de la lecture
+    // Désactiver boutons et pads lors de la lecture
+    btnElts.concat(padElts).forEach( el => { el.setAttribute('disabled', 'disabled'); el.style.cursor = 'auto'; } );
 
     var promise = Promise.resolve();                    // Création d'un promesse déjà tenue
     seq.forEach( (el, idx) => {                         // Pour chaque élement de la séquence
@@ -84,7 +88,8 @@ let playSequence = (seq, delay) => {
             );
         });
     });
+
     return promise;
 }
 
-let enablePlayButtons = () => ( btns.forEach( el => el.removeAttribute('disabled')) );
+let enableButtons = () => ( btnElts.concat(padElts).forEach( el => { el.removeAttribute('disabled'); el.style.cursor = 'pointer' } ) );
