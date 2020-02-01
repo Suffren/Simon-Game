@@ -2,8 +2,6 @@
 
 Implementation in vanilla JS of the famous musical game  
 
-__Soon:__ The interface provided is basic, visit http://regisvitel.fr if you want the final version
-
 ## How to use ?
     * Click on "play" button
     * Each colored button will activate one after the other signifying  
@@ -15,5 +13,11 @@ __Soon:__ The interface provided is basic, visit http://regisvitel.fr if you wan
     * If you loose, click again on "play" button
 
 
+## Note:
+Not Working on IE.
+
+
 __TODO:__ You can choose the "hard mode" to disable the "replay sequence" button  
 __TODO:__ Choose the final score you want to reach
+
+__Soon:__ The interface provided is basic, visit http://regisvitel.fr if you want the final version
