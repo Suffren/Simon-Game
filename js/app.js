@@ -2,14 +2,23 @@
 
 const pads = ['green', 'red', 'yellow', 'blue'];
 
-let playSeqBtn = document.getElementById('playSeq');
+let hardModeElt = document.getElementById('hardmode-btn');
 let btnElts = [...document.getElementsByClassName('btn')];
 let padElts = [...document.getElementsByClassName('pad')];
 
-playSeqBtn.setAttribute('disabled', 'disabled');
-playSeqBtn.addEventListener('click', () =>
-    playSequence(sequence, 500).then( () => enableButtons() )
-);
+let hardmode = false;
+hardModeElt.addEventListener('click', () => {
+    hardmode = !hardmode;
+    let userWantsRestart;
+
+    if(sequence.length > 0)
+        userWantsRestart = confirm("Le jeu redemarrera à zéro, êtes vous sûr ?");
+
+    if(userWantsRestart)
+        restart();
+
+    hardModeElt.innerHTML = `HARD MODE: ${hardmode ? "enable" : "disable" }`;
+});
 
 const bootSequence = [2,3,1,0];
 let sequence = [];
@@ -21,6 +30,10 @@ let addRandomSound = () => {
 let success = 0;
 let startBtn = document.getElementsByClassName('btn')[0];
 startBtn.addEventListener('click', () => { // Réinitialisation
+   restart();
+});
+
+let restart = () => {
     success = 0;
     sequence = [];
     addRandomSound();
@@ -30,7 +43,7 @@ startBtn.addEventListener('click', () => { // Réinitialisation
                 activatePad(pads[sequence[0]]);
         }, 1000)
     });
-});
+}
 
 let playPad = (padName) => {
     activatePad(padName);
@@ -55,11 +68,11 @@ let checkSequence = (padName) => {
         if(sequence.length !== success) {      // Si le nombre d'essais ne correspond pas encore à la fin de la séquence,
             return;                                 // On passe au pad suivant
         } else {                               // Si le joueur arrive avec succès à la fin de la séquence,
-            if (sequence.length === 3) {            // Le jeu se termine après 15 essais réussis
+            if (sequence.length === 14) {            // Le jeu se termine après 15 essais réussis
                 sequence = [];
                 return playSequence(bootSequence.concat(bootSequence).concat(bootSequence), 150).then( () => enableButtons() );
             }
-
+            document.getElementById('score').innerHTML = `Score:  ${success}`;
             setTimeout( () => {                // Sinon, refaire écouter la séquence en y ajoutant un nouveau son
                 addRandomSound();
                 playSequence(sequence, 500).then( () => enableButtons() );
@@ -68,9 +81,15 @@ let checkSequence = (padName) => {
             success = 0;
         }
     } else { // Echec
-        playSeqBtn.setAttribute('disabled', 'disabled');
-        sequence = [];
-        alert('Perdu !');
+        if(hardmode) {
+            document.getElementById('score').innerHTML = "Score:";
+            sequence = [];
+            alert('Perdu !');
+        } else {
+            setTimeout( () => {
+                playSequence(sequence, 500).then( () => enableButtons() );
+            } , 500);                         // Léger délai avant la lecture de la séquence
+        }
     }
 }
 
