@@ -77,7 +77,7 @@ let checkSequence = (padName) => {
 let playSequence = (seq, delay) => {
     success = 0;
     // Désactiver boutons et pads lors de la lecture
-    btnElts.concat(padElts).forEach( el => { el.setAttribute('disabled', 'disabled'); el.style.cursor = 'auto'; } );
+    btnElts.concat(padElts).forEach( el => { el.setAttribute('disabled', 'disabled'); } );
 
     var promise = Promise.resolve();                    // Création d'un promesse déjà tenue
     seq.forEach( (el, idx) => {                         // Pour chaque élement de la séquence
@@ -92,4 +92,4 @@ let playSequence = (seq, delay) => {
     return promise;
 }
 
-let enableButtons = () => ( btnElts.concat(padElts).forEach( el => { el.removeAttribute('disabled'); el.style.cursor = 'pointer' } ) );
+let enableButtons = () => ( btnElts.concat(padElts).forEach( el => { el.removeAttribute('disabled');} ) );
