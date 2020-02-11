@@ -8,17 +8,25 @@ let padElts = [...document.getElementsByClassName('pad')];
 
 let hardmode = false;
 hardModeElt.addEventListener('click', () => {
-    hardmode = !hardmode;
     let userWantsRestart;
 
-    if(sequence.length > 0)
-        userWantsRestart = confirm("Le jeu redemarrera à zéro, êtes vous sûr ?");
-
-    if(userWantsRestart)
-        restart();
-
-    hardModeElt.innerHTML = `HARD MODE: ${hardmode ? "enable" : "disable" }`;
+    if(sequence.length > 0) {
+        userWantsRestart = confirm("Le jeu redémarrera à zéro, êtes vous sûr ?");
+        if(userWantsRestart) {
+            toggleHardMode();
+            restart();
+        } else {
+            return;
+        }
+    } else {
+        toggleHardMode();
+    }
 });
+
+let toggleHardMode = () => {
+    hardmode = !hardmode;
+    hardModeElt.innerHTML = `HARD MODE: ${hardmode ? "enable" : "disable" }`;
+}
 
 const bootSequence = [2,3,1,0];
 let sequence = [];
