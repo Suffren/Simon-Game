@@ -37,6 +37,7 @@ let restart = () => {
     success = 0;
     sequence = [];
     addRandomSound();
+    disableButtons();
     playSequence(bootSequence, 200).then( () => {
         setTimeout( () => {
                 enableButtons();
@@ -62,18 +63,19 @@ let activatePad = (padName) => {
 }
 
 let checkSequence = (padName) => {
-    let idxActivePad = pads.indexOf(padName);// Trouver l'index du pad concerné
-    if(sequence[success] === idxActivePad) { // Vérifier si le pad cliqué correspond à l'élément courant de la séquence
-        success += 1;                          // Si oui, c'est un essai réussi de plus
-        if(sequence.length !== success) {      // Si le nombre d'essais ne correspond pas encore à la fin de la séquence,
-            return;                                 // On passe au pad suivant
-        } else {                               // Si le joueur arrive avec succès à la fin de la séquence,
-            if (sequence.length === 14) {            // Le jeu se termine après 15 essais réussis
+    let idxActivePad = pads.indexOf(padName);   // Trouver l'index du pad concerné
+    if(sequence[success] === idxActivePad) {    // Vérifier si le pad cliqué correspond à l'élément courant de la séquence
+        success += 1;                               // Si oui, c'est un essai réussi de plus
+        if(sequence.length !== success) {           // Si le nombre d'essais réussis ne correspond pas encore à la fin de la séquence,
+            return;                                     // On passe au pad suivant
+        } else {                                    // Si le joueur arrive avec succès à la fin de la séquence
+            disableButtons();
+            if (sequence.length === 14) {               // (Le jeu se termine après 15 essais réussis)
                 sequence = [];
                 return playSequence(bootSequence.concat(bootSequence).concat(bootSequence), 150).then( () => enableButtons() );
             }
             document.getElementById('score').innerHTML = `Score:  ${success}`;
-            setTimeout( () => {                // Sinon, refaire écouter la séquence en y ajoutant un nouveau son
+            setTimeout( () => {                         // refaire écouter la séquence en y ajoutant un nouveau son
                 addRandomSound();
                 playSequence(sequence, 500).then( () => enableButtons() );
             } , 1000);                         // Léger délai avant la lecture de la séquence
@@ -86,17 +88,16 @@ let checkSequence = (padName) => {
             sequence = [];
             alert('Perdu !');
         } else {
+            disableButtons();
             setTimeout( () => {
                 playSequence(sequence, 500).then( () => enableButtons() );
-            } , 500);                         // Léger délai avant la lecture de la séquence
+            } , 500);
         }
     }
 }
 
 let playSequence = (seq, delay) => {
     success = 0;
-    // Désactiver boutons et pads lors de la lecture
-    btnElts.concat(padElts).forEach( el => { el.setAttribute('disabled', 'disabled'); } );
 
     var promise = Promise.resolve();                    // Création d'un promesse déjà tenue
     seq.forEach( (el, idx) => {                         // Pour chaque élement de la séquence
@@ -112,3 +113,4 @@ let playSequence = (seq, delay) => {
 }
 
 let enableButtons = () => ( btnElts.concat(padElts).forEach( el => { el.removeAttribute('disabled');} ) );
+let disableButtons = () => ( btnElts.concat(padElts).forEach( el => { el.setAttribute('disabled', 'disabled'); } ) );
